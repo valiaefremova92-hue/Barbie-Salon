@@ -131,8 +131,20 @@ function renderSlots(){
 function selectTime(time){ state.selectedTime=time; document.querySelectorAll('.slot-btn').forEach(btn=>btn.classList.remove('selected')); [...els.slots.children].find(btn=>btn.textContent===time)?.classList.add('selected'); openStep('form'); updateSummary(); }
 function generateSlots(workStart,workEnd,step,duration,breakStart,breakEnd){ const result=[],start=timeToMinutes(workStart),end=timeToMinutes(workEnd),bStart=breakStart?timeToMinutes(breakStart):null,bEnd=breakEnd?timeToMinutes(breakEnd):null; for(let current=start;current+duration<=end;current+=step){ const slotEnd=current+duration, crossesBreak=bStart!==null&&bEnd!==null&&current<bEnd&&slotEnd>bStart; if(!crossesBreak) result.push(minutesToTime(current)); } return result; }
 function overlapsBusy(startTime,endTime,busyRanges){ const start=timeToMinutes(startTime),end=timeToMinutes(endTime); return busyRanges.some(range=>start<timeToMinutes(range.end_time)&&end>timeToMinutes(range.start_time)); }
-function updateSummary(){ if(!state.selectedService||!state.selectedDate||!state.selectedTime){ els.summary.classList.remove('visible'); return; } const endTime=addMinutesToTime(state.selectedTime,state.selectedService.duration); els.summary.classList.add('visible'); els.summary.innerHTML=`<strong>${state.mode==='reschedule'?'Новий час запису':'Твій запис'}:</strong><br>Послуга: ${escapeHtml(state.selectedService.service_name)}<br>Дата: ${formatDate(state.selectedDate)}<br>Час: ${state.selectedTime}
+function updateSummary() {
+  if (!state.selectedService || !state.selectedDate || !state.selectedTime) {
+    els.summary.classList.remove('visible');
+    return;
+  }
 
+  els.summary.classList.add('visible');
+  els.summary.innerHTML = `
+    <strong>${state.mode === 'reschedule' ? 'Новий час запису' : 'Твій запис'}:</strong><br>
+    Послуга: ${escapeHtml(state.selectedService.service_name)}<br>
+    Дата: ${formatDate(state.selectedDate)}<br>
+    Час: ${state.selectedTime}
+  `;
+}
 async function submitBooking(event){
   event.preventDefault(); hideError();
   if(!state.selectedService||!state.selectedDate||!state.selectedTime) return showError('Обери послугу, дату і час.');
@@ -153,7 +165,7 @@ async function confirmCancelBooking(){
   catch(err){ showError(err.message); }
   finally{ els.confirmCancel.disabled=false; els.confirmCancel.textContent='Так, скасувати запис'; }
 }
-function showSuccess(payload,isReschedule=false){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=isReschedule?'Запис перенесено':'Твій запис підтверджено'; els.successDetails.innerHTML=`<strong>Послуга:</strong> ${escapeHtml(payload.service)}<br><strong>Дата:</strong> ${formatDate(payload.date)}<br><strong>Час:</strong> ${payload.time}–${payload.end_time}<br><strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br><strong>Телефон:</strong> ${escapeHtml(payload.phone)}`; if(state.tg) state.tg.sendData(JSON.stringify({action:isReschedule?'booking_rescheduled':'booking_created',...payload})); }
+function showSuccess(payload,isReschedule=false){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=isReschedule?'Запис перенесено':'Твій запис підтверджено'; els.successDetails.innerHTML=`<strong>Послуга:</strong> ${escapeHtml(payload.service)}<br><strong>Дата:</strong> ${formatDate(payload.date)}<br><strong>Час:</strong> ${payload.time}<br><strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br><strong>Телефон:</strong> ${escapeHtml(payload.phone)}`; if(state.tg) state.tg.sendData(JSON.stringify({action:isReschedule?'booking_rescheduled':'booking_created',...payload})); }
 function showSuccessMessage(title,text){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=title; els.successDetails.textContent=text; }
 function openStep(stepName){ const order=['service','date','time','form']; const index=order.indexOf(stepName); order.forEach((name,i)=>els.steps[name].classList.toggle('active',i<=index)); setTimeout(()=>els.steps[stepName]?.scrollIntoView({behavior:'smooth',block:'start'}),80); }
 function hideAllSteps(){ Object.values(els.steps).forEach(step=>step.classList.remove('active')); }
