@@ -79,6 +79,8 @@ async function initCancelMode(){
     const data = await apiGet('getBookingByToken',{token:state.token});
     if(!data.success) throw new Error(data.message || 'Запис не знайдено');
     state.booking = data.booking;
+    console.log(data.booking);
+alert(JSON.stringify(data.booking, null, 2));
     els.cancelDetails.innerHTML = bookingHtml(state.booking);
   }catch(err){ showError(err.message); }
 }
