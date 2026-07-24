@@ -228,6 +228,7 @@ if (state.tg && !isReschedule) {
     })
   );
 }
+  }
 function showSuccessMessage(title, text) {
   hideAllSteps();
 
