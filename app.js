@@ -168,7 +168,15 @@ async function confirmCancelBooking(){
   finally{ els.confirmCancel.disabled=false; els.confirmCancel.textContent='Так, скасувати запис'; }
 }
 function showSuccess(payload,isReschedule=false){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=isReschedule?'Запис перенесено':'Твій запис підтверджено'; els.successDetails.innerHTML=`<strong>Послуга:</strong> ${escapeHtml(payload.service)}<br><strong>Дата:</strong> ${formatDate(payload.date)}<br><strong>Час:</strong> ${payload.time}<br><strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br><strong>Телефон:</strong> ${escapeHtml(payload.phone)}`; if(state.tg) state.tg.sendData(JSON.stringify({action:isReschedule?'booking_rescheduled':'booking_created',...payload})); }
-function showSuccessMessage(title,text){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=title; els.successDetails.textContent=text; }
+function showSuccessMessage(title, text) {
+  hideAllSteps();
+
+  els.cancelCard.style.display = 'none';
+
+  els.successCard.classList.remove('hidden');
+  els.successTitle.textContent = title;
+  els.successDetails.textContent = text;
+}
 function openStep(stepName){ const order=['service','date','time','form']; const index=order.indexOf(stepName); order.forEach((name,i)=>els.steps[name].classList.toggle('active',i<=index)); setTimeout(()=>els.steps[stepName]?.scrollIntoView({behavior:'smooth',block:'start'}),80); }
 function hideAllSteps(){ Object.values(els.steps).forEach(step=>step.classList.remove('active')); }
 function bookingHtml(b){ return `<strong>Послуга:</strong> ${escapeHtml(b.service)}<br><strong>Дата:</strong> ${formatDate(b.date)}<br><strong>Час:</strong> ${b.time}<br><strong>Ім’я:</strong> ${escapeHtml(b.name)}`; }
