@@ -56,21 +56,13 @@ function bindEvents() {
 
   // Повернутись у бот
   els.backToBot.addEventListener('click', () => {
-    if (window.Telegram && Telegram.WebApp) {
-      try {
-        Telegram.WebApp.close();
-      } catch (e) {}
+  if (window.Telegram?.WebApp) {
+    Telegram.WebApp.close();
+    return;
+  }
 
-      try {
-        Telegram.WebApp.ready();
-      } catch (e) {}
-
-      try {
-        window.location.href = "https://t.me/" + Telegram.WebApp.initDataUnsafe.user.username;
-      } catch (e) {}
-    }
-  });
-
+  window.history.back();
+});
   // Новий запис
   els.newBooking.addEventListener('click', () => {
     window.location.href = window.location.origin + window.location.pathname;
@@ -184,7 +176,15 @@ async function submitBooking(event){
     if(!isApiReady()) throw new Error('API_URL не налаштований');
     const response = state.mode==='reschedule' ? await apiPost('rescheduleBooking',{token:state.token,...payload}) : await apiPost('createBooking',payload);
     if(!response.success) throw new Error(response.message||'Не вдалося створити запис');
-    showSuccess({...payload,id:response.id}, state.mode==='reschedule');
+    showSuccess(
+  {
+    ...payload,
+    id: response.id,
+    cancel_token: response.cancel_token,
+    reschedule_token: response.reschedule_token
+  },
+  state.mode === 'reschedule'
+);
   }catch(err){ showError(err.message||'Помилка запису. Спробуй ще раз.'); }
   finally{ els.submitBtn.disabled=false; els.submitBtn.textContent=state.mode==='reschedule'?'Підтвердити перенесення 💗':'Підтвердити запис 💗'; }
 }
@@ -194,7 +194,39 @@ async function confirmCancelBooking(){
   catch(err){ showError(err.message); }
   finally{ els.confirmCancel.disabled=false; els.confirmCancel.textContent='Так, скасувати запис'; }
 }
-function showSuccess(payload,isReschedule=false){ hideAllSteps(); els.cancelCard.classList.add('hidden'); els.successCard.classList.remove('hidden'); els.successTitle.textContent=isReschedule?'Запис перенесено':'Твій запис підтверджено'; els.successDetails.innerHTML=`<strong>Послуга:</strong> ${escapeHtml(payload.service)}<br><strong>Дата:</strong> ${formatDate(payload.date)}<br><strong>Час:</strong> ${payload.time}<br><strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br><strong>Телефон:</strong> ${escapeHtml(payload.phone)}`; if(state.tg) state.tg.sendData(JSON.stringify({action:isReschedule?'booking_rescheduled':'booking_created',...payload})); }
+function showSuccess(payload, isReschedule = false) {
+  hideAllSteps();
+
+  els.cancelCard.classList.add('hidden');
+  els.successCard.classList.remove('hidden');
+
+  els.successTitle.textContent = isReschedule
+    ? 'Запис перенесено'
+    : 'Твій запис підтверджено';
+
+  els.successDetails.innerHTML = `
+    <strong>Послуга:</strong> ${escapeHtml(payload.service)}<br>
+    <strong>Дата:</strong> ${formatDate(payload.date)}<br>
+    <strong>Час:</strong> ${payload.time}${payload.end_time ? '–' + payload.end_time : ''}<br>
+    <strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br>
+    <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
+  `;
+
+  // Зберігаємо новий запис і нові токени
+  state.booking = {
+    ...state.booking,
+    ...payload
+  };
+
+  if (state.tg) {
+    state.tg.sendData(
+      JSON.stringify({
+        action: isReschedule ? 'booking_rescheduled' : 'booking_created',
+        ...payload
+      })
+    );
+  }
+}
 function showSuccessMessage(title, text) {
   hideAllSteps();
 
@@ -206,7 +238,12 @@ function showSuccessMessage(title, text) {
 }
 function openStep(stepName){ const order=['service','date','time','form']; const index=order.indexOf(stepName); order.forEach((name,i)=>els.steps[name].classList.toggle('active',i<=index)); setTimeout(()=>els.steps[stepName]?.scrollIntoView({behavior:'smooth',block:'start'}),80); }
 function hideAllSteps(){ Object.values(els.steps).forEach(step=>step.classList.remove('active')); }
-function bookingHtml(b){ return `<strong>Послуга:</strong> ${escapeHtml(b.service)}<br><strong>Дата:</strong> ${formatDate(b.date)}<br><strong>Час:</strong> ${b.time}<br><strong>Ім’я:</strong> ${escapeHtml(b.name)}`; }
+function bookingHtml(b){
+  return `<strong>Послуга:</strong> ${escapeHtml(b.service)}<br>
+<strong>Дата:</strong> ${formatDate(b.date)}<br>
+<strong>Час:</strong> ${b.time}${b.end_time ? '–' + b.end_time : ''}<br>
+<strong>Ім’я:</strong> ${escapeHtml(b.name)}`;
+}
 async function apiGet(action,params={}){ const url=new URL(API_URL); url.searchParams.set('action',action); Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v)); const r=await fetch(url.toString()); return r.json(); }
 async function apiPost(action,payload){ const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}); return r.json(); }
 function isApiReady(){ return API_URL && !API_URL.includes('PASTE_YOUR'); }
