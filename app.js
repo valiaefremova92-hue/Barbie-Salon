@@ -218,14 +218,15 @@ function showSuccess(payload, isReschedule = false) {
     ...payload
   };
 
-  if (state.tg) {
-    state.tg.sendData(
-      JSON.stringify({
-        action: isReschedule ? 'booking_rescheduled' : 'booking_created',
-        ...payload
-      })
-    );
-  }
+ // Після нового запису повідомляємо SendPulse.
+// Після перенесення цього НЕ робимо.
+if (state.tg && !isReschedule) {
+  state.tg.sendData(
+    JSON.stringify({
+      action: 'booking_created',
+      ...payload
+    })
+  );
 }
 function showSuccessMessage(title, text) {
   hideAllSteps();
