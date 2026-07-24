@@ -48,14 +48,42 @@ async function init(){
   renderServices(); renderCalendar();
 }
 
-function bindEvents(){
-  els.prevMonth.addEventListener('click',()=>changeMonth(-1));
-  els.nextMonth.addEventListener('click',()=>changeMonth(1));
-  els.form.addEventListener('submit',submitBooking);
-  els.backToBot.addEventListener('click',()=> state.tg ? state.tg.close() : null);
-  els.newBooking.addEventListener('click',()=> window.location.href = window.location.origin + window.location.pathname);
-  els.keepBooking.addEventListener('click',()=> state.tg ? state.tg.close() : showSuccessMessage('Запис залишено без змін','Можеш закрити це вікно.'));
-  els.confirmCancel.addEventListener('click',confirmCancelBooking);
+function bindEvents() {
+  els.prevMonth.addEventListener('click', () => changeMonth(-1));
+  els.nextMonth.addEventListener('click', () => changeMonth(1));
+
+  els.form.addEventListener('submit', submitBooking);
+
+  // Повернутись у бот
+  els.backToBot.addEventListener('click', () => {
+    if (window.Telegram && Telegram.WebApp) {
+      try {
+        Telegram.WebApp.close();
+      } catch (e) {}
+
+      try {
+        Telegram.WebApp.ready();
+      } catch (e) {}
+
+      try {
+        window.location.href = "https://t.me/" + Telegram.WebApp.initDataUnsafe.user.username;
+      } catch (e) {}
+    }
+  });
+
+  // Новий запис
+  els.newBooking.addEventListener('click', () => {
+    window.location.href = window.location.origin + window.location.pathname;
+  });
+
+  // Залишити запис
+  els.keepBooking.addEventListener('click', () => {
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.close();
+    }
+  });
+
+  els.confirmCancel.addEventListener('click', confirmCancelBooking);
 }
 
 async function loadInitialData(){
@@ -79,8 +107,7 @@ async function initCancelMode(){
     const data = await apiGet('getBookingByToken',{token:state.token});
     if(!data.success) throw new Error(data.message || 'Запис не знайдено');
     state.booking = data.booking;
-    console.log(data.booking);
-alert(JSON.stringify(data.booking, null, 2));
+    
     els.cancelDetails.innerHTML = bookingHtml(state.booking);
   }catch(err){ showError(err.message); }
 }
@@ -171,7 +198,7 @@ function showSuccess(payload,isReschedule=false){ hideAllSteps(); els.cancelCard
 function showSuccessMessage(title, text) {
   hideAllSteps();
 
-  els.cancelCard.style.display = 'none';
+  els.cancelCard.classList.add('hidden');
 
   els.successCard.classList.remove('hidden');
   els.successTitle.textContent = title;
