@@ -228,22 +228,48 @@ function showSuccess(payload, isReschedule = false) {
   }
 
   els.successTitle.textContent = isReschedule
-    ? 'Запис перенесено'
+    ? '💗 Запис успішно перенесено'
     : 'Твій запис підтверджено';
 
-  els.successDetails.innerHTML = `
-    <strong>Послуга:</strong> ${escapeHtml(payload.service)}<br>
-    <strong>Дата:</strong> ${formatDate(payload.date)}<br>
-    <strong>Час:</strong> ${payload.time}${payload.end_time ? '–' + payload.end_time : ''}<br>
-    <strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br>
-    <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
-  `;
+  if (isReschedule) {
+    els.successDetails.innerHTML = `
+      <p style="margin-bottom:16px;">
+        Можеш закрити цей додаток.<br>
+        До зустрічі у призначений час! 🌸
+      </p>
+
+      <strong>Послуга:</strong> ${escapeHtml(payload.service)}<br>
+      <strong>Дата:</strong> ${formatDate(payload.date)}<br>
+      <strong>Час:</strong> ${payload.time}${payload.end_time ? '–' + payload.end_time : ''}<br>
+      <strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br>
+      <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
+    `;
+  } else {
+    els.successDetails.innerHTML = `
+      <strong>Послуга:</strong> ${escapeHtml(payload.service)}<br>
+      <strong>Дата:</strong> ${formatDate(payload.date)}<br>
+      <strong>Час:</strong> ${payload.time}${payload.end_time ? '–' + payload.end_time : ''}<br>
+      <strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br>
+      <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
+    `;
+  }
 
   state.booking = {
     ...state.booking,
     ...payload
   };
 
+  // Після нового запису повідомляємо SendPulse.
+  // Після перенесення цього НЕ робимо.
+  if (state.tg && !isReschedule) {
+    state.tg.sendData(
+      JSON.stringify({
+        action: 'booking_created',
+        ...payload
+      })
+    );
+  }
+}
   // Після нового запису повідомляємо SendPulse.
   // Після перенесення цього НЕ робимо.
   if (state.tg && !isReschedule) {
