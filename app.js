@@ -3,7 +3,7 @@
 // Функції: запис, скасування, перенесення, зайняті слоти
 // ===============================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzN8-Pg9d_YiyV7Ro8pmnmTa6OamAa6hyvPu4xg7ZVWdnh5RLVygxTL3afXV5n60Doz3g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwDkMRQ_-H-zXmD_J84UJsWc4MiCX5gmORYrynON8a3WgFNKdwe2icNqcdLwGgTYIXayQ/exec';
 
 const DEFAULT_SETTINGS = { workStart:'10:00', workEnd:'16:00', slotStep:30, bookingDays:30, breakStart:'', breakEnd:'' };
 const FALLBACK_SERVICES = [
