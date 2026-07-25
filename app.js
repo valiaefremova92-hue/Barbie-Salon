@@ -270,17 +270,6 @@ function showSuccess(payload, isReschedule = false) {
     );
   }
 }
-  // Після нового запису повідомляємо SendPulse.
-  // Після перенесення цього НЕ робимо.
-  if (state.tg && !isReschedule) {
-    state.tg.sendData(
-      JSON.stringify({
-        action: 'booking_created',
-        ...payload
-      })
-    );
-  }
-}
 function showSuccessMessage(title, text) {
   hideAllSteps();
 
