@@ -200,6 +200,12 @@ function showSuccess(payload, isReschedule = false) {
   els.cancelCard.classList.add('hidden');
   els.successCard.classList.remove('hidden');
 
+  if (isReschedule) {
+    els.backToBot.classList.add('hidden');
+  } else {
+    els.backToBot.classList.remove('hidden');
+  }
+
   els.successTitle.textContent = isReschedule
     ? 'Запис перенесено'
     : 'Твій запис підтверджено';
@@ -212,12 +218,14 @@ function showSuccess(payload, isReschedule = false) {
     <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
   `;
 
-  // Зберігаємо новий запис і нові токени
+  // Зберігаємо новий запис
   state.booking = {
     ...state.booking,
     ...payload
   };
 
+  // Далі йде твій існуючий код...
+}
  // Після нового запису повідомляємо SendPulse.
 // Після перенесення цього НЕ робимо.
 if (state.tg && !isReschedule) {
