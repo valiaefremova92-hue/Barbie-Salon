@@ -188,11 +188,32 @@ async function submitBooking(event){
   }catch(err){ showError(err.message||'Помилка запису. Спробуй ще раз.'); }
   finally{ els.submitBtn.disabled=false; els.submitBtn.textContent=state.mode==='reschedule'?'Підтвердити перенесення 💗':'Підтвердити запис 💗'; }
 }
-async function confirmCancelBooking(){
-  hideError(); els.confirmCancel.disabled=true; els.confirmCancel.textContent='Скасовую...';
-  try{ const response=await apiPost('cancelBooking',{token:state.token}); if(!response.success) throw new Error(response.message||'Не вдалося скасувати'); showSuccessMessage('Запис скасовано','Майстер отримав повідомлення. Це вікно можна закрити.'); }
-  catch(err){ showError(err.message); }
-  finally{ els.confirmCancel.disabled=false; els.confirmCancel.textContent='Так, скасувати запис'; }
+async function confirmCancelBooking() {
+  hideError();
+
+  els.confirmCancel.disabled = true;
+  els.confirmCancel.textContent = 'Скасовую...';
+
+  try {
+    const response = await apiPost('cancelBooking', {
+      token: state.token
+    });
+
+    if (!response.success) {
+      throw new Error(response.message || 'Не вдалося скасувати');
+    }
+
+    showSuccessMessage(
+      '💗 Запис успішно скасовано',
+      'Можеш закрити цей додаток.<br><br>Майстер уже отримав повідомлення.'
+    );
+
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    els.confirmCancel.disabled = false;
+    els.confirmCancel.textContent = 'Так, скасувати запис';
+  }
 }
 function showSuccess(payload, isReschedule = false) {
   hideAllSteps();
@@ -238,10 +259,16 @@ function showSuccessMessage(title, text) {
   hideAllSteps();
 
   els.cancelCard.classList.add('hidden');
-
   els.successCard.classList.remove('hidden');
+
+  // Ховаємо кнопку повернення в бот
+  els.backToBot.classList.add('hidden');
+
+  // Показуємо кнопку нового запису
+  els.newBooking.classList.remove('hidden');
+
   els.successTitle.textContent = title;
-  els.successDetails.textContent = text;
+  els.successDetails.innerHTML = text;
 }
 function openStep(stepName){ const order=['service','date','time','form']; const index=order.indexOf(stepName); order.forEach((name,i)=>els.steps[name].classList.toggle('active',i<=index)); setTimeout(()=>els.steps[stepName]?.scrollIntoView({behavior:'smooth',block:'start'}),80); }
 function hideAllSteps(){ Object.values(els.steps).forEach(step=>step.classList.remove('active')); }
