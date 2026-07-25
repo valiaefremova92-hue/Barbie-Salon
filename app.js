@@ -218,13 +218,45 @@ function showSuccess(payload, isReschedule = false) {
     <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
   `;
 
-  // Зберігаємо новий запис
+  // Зберігаємо новий записfunction showSuccess(payload, isReschedule = false) {
+  hideAllSteps();
+
+  els.cancelCard.classList.add('hidden');
+  els.successCard.classList.remove('hidden');
+
+  if (isReschedule) {
+    els.backToBot.classList.add('hidden');
+  } else {
+    els.backToBot.classList.remove('hidden');
+  }
+
+  els.successTitle.textContent = isReschedule
+    ? 'Запис перенесено'
+    : 'Твій запис підтверджено';
+
+  els.successDetails.innerHTML = `
+    <strong>Послуга:</strong> ${escapeHtml(payload.service)}<br>
+    <strong>Дата:</strong> ${formatDate(payload.date)}<br>
+    <strong>Час:</strong> ${payload.time}${payload.end_time ? '–' + payload.end_time : ''}<br>
+    <strong>Ім’я:</strong> ${escapeHtml(payload.name)}<br>
+    <strong>Телефон:</strong> ${escapeHtml(payload.phone)}
+  `;
+
   state.booking = {
     ...state.booking,
     ...payload
   };
 
-  // Далі йде твій існуючий код...
+  // Після нового запису повідомляємо SendPulse.
+  // Після перенесення цього НЕ робимо.
+  if (state.tg && !isReschedule) {
+    state.tg.sendData(
+      JSON.stringify({
+        action: 'booking_created',
+        ...payload
+      })
+    );
+  }
 }
  // Після нового запису повідомляємо SendPulse.
 // Після перенесення цього НЕ робимо.
