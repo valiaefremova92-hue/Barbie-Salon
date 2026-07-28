@@ -4,109 +4,185 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Barbie Salon Booking</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="app-shell">
-     <header class="hero">
 
-    <img src="logo.png" class="hero-logo" alt="Barbie Salon">
+<div class="app-shell">
 
-    <h1>Barbie Salon</h1>
+    <header class="hero">
 
-    <p>
-        Онлайн-запис до перукаря.<br>
-        Обери послугу, дату та зручний час.
-    </p>
+        <img src="logo.png" class="hero-logo" alt="Barbie Salon">
 
-</header>
+        <h1 id="heroTitle">Barbie Salon</h1>
+
+        <p id="heroText">
+            Онлайн-запис до перукаря.<br>
+            Обери послугу, дату та зручний час.
+        </p>
+
+    </header>
 
     <main>
-      <section class="card hidden" id="cancelCard">
-        <div class="step-label">Скасування</div>
-        <h2>Скасувати запис?</h2>
-        <div id="cancelDetails" class="summary visible"></div>
-        <button class="danger-btn" id="confirmCancel" type="button">Так, скасувати запис</button>
-        <button class="secondary-btn" id="keepBooking" type="button">Ні, залишити запис</button>
-      </section>
 
-      <section class="card step active" id="step-service">
-        <div class="step-label">Крок 1</div>
-        <h2>Обери послугу</h2>
-        <div id="services" class="grid-list"></div>
-      </section>
+        <section class="card hidden" id="cancelCard">
 
-      <section class="card step" id="step-date">
-        <div class="step-label">Крок 2</div>
-        <h2>Обери день</h2>
-        <div class="calendar-header">
-          <button class="icon-btn" id="prevMonth" type="button">‹</button>
-          <div id="monthTitle" class="month-title"></div>
-          <button class="icon-btn" id="nextMonth" type="button">›</button>
-        </div>
-        <div class="weekdays">
-          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
-        </div>
-        <div id="calendar" class="calendar"></div>
-      </section>
+            <div class="step-label">Скасування</div>
 
-      <section class="card step" id="step-time">
-        <div class="step-label">Крок 3</div>
-        <h2>Обери час</h2>
-        <p class="hint" id="timeHint">Спочатку обери послугу і дату.</p>
-        <div id="slots" class="slots"></div>
-      </section>
+            <h2>Скасувати запис?</h2>
 
-      <section class="card step" id="step-form">
-        <div class="step-label">Крок 4</div>
-        <h2>Залиш дані</h2>
+            <div id="cancelDetails" class="summary visible"></div>
 
-        <form id="bookingForm">
-          <label>
-            Ім’я
-            <input id="clientName" name="name" type="text" placeholder="Наприклад, Анна" required />
-          </label>
+            <button class="danger-btn" id="confirmCancel" type="button">
+                Так, скасувати запис
+            </button>
 
-          <label>
-            Телефон
-            <input id="clientPhone" name="phone" type="tel" placeholder="+380..." required />
-          </label>
+            <button class="secondary-btn" id="keepBooking" type="button">
+                Ні, залишити запис
+            </button>
 
-          <label>
-            Коментар
-            <textarea id="clientComment" name="comment" placeholder="Наприклад: хочу укладку на фотосесію"></textarea>
-          </label>
+        </section>
 
-          <div class="summary" id="summary"></div>
+        <section class="card step active" id="step-service">
 
-          <button class="primary-btn" id="submitBtn" type="submit">
-            Підтвердити запис 💗
-          </button>
-        </form>
-      </section>
+            <div class="step-label">Крок 1</div>
 
-      <section class="card success-card hidden" id="successCard">
-        <div class="success-icon">💗</div>
-        <h2 id="successTitle">Твій запис підтверджено</h2>
-        <div id="successDetails" class="success-details"></div>
+            <h2>Обери послугу</h2>
 
-        <button class="primary-btn" id="backToBot" type="button">
-          Повернутися в бот
-        </button>
+            <div id="services" class="grid-list"></div>
 
-        <button class="secondary-btn" id="newBooking" type="button">
-          Створити ще один запис
-        </button>
-      </section>
+        </section>
 
-      <section class="error-box hidden" id="errorBox"></section>
+        <section class="card step" id="step-date">
+
+            <div class="step-label">Крок 2</div>
+
+            <h2>Обери день</h2>
+
+            <div class="calendar-header">
+
+                <button class="icon-btn" id="prevMonth" type="button">‹</button>
+
+                <div id="monthTitle" class="month-title"></div>
+
+                <button class="icon-btn" id="nextMonth" type="button">›</button>
+
+            </div>
+
+            <div class="weekdays">
+                <span>Пн</span>
+                <span>Вт</span>
+                <span>Ср</span>
+                <span>Чт</span>
+                <span>Пт</span>
+                <span>Сб</span>
+                <span>Нд</span>
+            </div>
+
+            <div id="calendar" class="calendar"></div>
+
+        </section>
+
+        <section class="card step" id="step-time">
+
+            <div class="step-label">Крок 3</div>
+
+            <h2>Обери час</h2>
+
+            <p class="hint" id="timeHint">
+                Спочатку обери послугу і дату.
+            </p>
+
+            <div id="slots" class="slots"></div>
+
+        </section>
+
+        <section class="card step" id="step-form">
+
+            <div class="step-label">Крок 4</div>
+
+            <h2>Залиш дані</h2>
+
+            <form id="bookingForm">
+
+                <label>
+                    Ім’я
+                    <input
+                        id="clientName"
+                        name="name"
+                        type="text"
+                        placeholder="Наприклад, Анна"
+                        required
+                    />
+                </label>
+
+                <label>
+                    Телефон
+                    <input
+                        id="clientPhone"
+                        name="phone"
+                        type="tel"
+                        placeholder="+380..."
+                        required
+                    />
+                </label>
+
+                <label>
+                    Коментар
+                    <textarea
+                        id="clientComment"
+                        name="comment"
+                        placeholder="Наприклад: хочу укладку на фотосесію"
+                    ></textarea>
+                </label>
+
+                <div class="summary" id="summary"></div>
+
+                <button class="primary-btn" id="submitBtn" type="submit">
+                    Підтвердити запис 💗
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="card success-card hidden" id="successCard">
+
+            <div class="success-icon">
+                <img src="logo.png" class="success-logo" alt="Barbie Salon">
+            </div>
+
+            <h2 id="successTitle">
+                Твій запис підтверджено
+            </h2>
+
+            <div id="successDetails" class="success-details"></div>
+
+            <button class="primary-btn" id="backToBot" type="button">
+                Повернутися в бот
+            </button>
+
+            <button class="secondary-btn" id="newBooking" type="button">
+                Створити ще один запис
+            </button>
+
+        </section>
+
+        <section class="error-box hidden" id="errorBox"></section>
+
     </main>
-  </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="app.js"></script>
+</div>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="app.js"></script>
+
 </body>
 </html>
