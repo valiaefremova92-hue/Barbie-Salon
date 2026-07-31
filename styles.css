@@ -259,21 +259,20 @@ textarea {
   text-align:center}
 
 .success-icon{
-    width:200px;
-    height:200px;
+    width:130px;
+    height:130px;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin:-22px auto 20px;
-    background:linear-gradient(135deg,#ff4fa3,#ff79c5);
+    margin:-28px auto 22px;
+    background:linear-gradient(135deg,#ff4fa3,#ff7fc7);
     border-radius:50%;
-    box-shadow:0 14px 32px rgba(255,79,163,.30);
+    box-shadow:0 16px 35px rgba(255,79,163,.30);
 }
 .success-logo{
-    width:105px;
-    height:105px;
+    width:130px;
+    height:130px;
     object-fit:contain;
-    transform:translateY(-4px);
 }
 
 .success-details {
