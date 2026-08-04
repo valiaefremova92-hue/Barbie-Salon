@@ -1,27 +1,27 @@
 :root{
 
     /* Основні кольори */
-    --primary:#3d3d3d;
-    --primary-dark:#171717;
-    --primary-light:#666666;
+    --primary:#ff9728;
+    --primary-dark:#ff7600;
+    --primary-light:#ffb85b;
 
     /* Тіні */
-    --shadow:rgba(0,0,0,.22);
+    --shadow:rgba(255,118,0,.20);
 
     /* Фон */
-    --bg:#f5f5f5;
-    --bg-soft:#e8e8e8;
+    --bg:#fff8ef;
+    --bg-soft:#ffe9cf;
 
     /* Картки */
     --card:#ffffff;
 
     /* Текст */
-    --text:#1f1f1f;
-    --muted:#666666;
+    --text:#32261f;
+    --muted:#796552;
 
     /* Акценти */
-    --accent:#f2f2f2;
-    --border:#d8d8d8;
+    --accent:#fff1e0;
+    --border:#ffd3a5;
 
     /* Білий */
     --white:#ffffff;
@@ -32,8 +32,8 @@
     --white-15:rgba(255,255,255,.15);
 
     /* Тіні тексту */
-    --text-shadow:rgba(0,0,0,.20);
-    --text-shadow-light:rgba(0,0,0,.10);
+    --text-shadow:rgba(0,0,0,.12);
+    --text-shadow-light:rgba(0,0,0,.08);
 
     /* Danger */
     --danger:#ff4d4d;
