@@ -1,27 +1,27 @@
 :root{
 
     /* Основні кольори */
-    --primary:#ff9728;
-    --primary-dark:#ff7600;
-    --primary-light:#ffb85b;
+    --primary:#8b5cf6;
+    --primary-dark:#6d28d9;
+    --primary-light:#b28cff;
 
     /* Тіні */
-    --shadow:rgba(255,118,0,.20);
+    --shadow:rgba(109,40,217,.20);
 
     /* Фон */
-    --bg:#fff8ef;
-    --bg-soft:#ffe9cf;
+    --bg:#faf7ff;
+    --bg-soft:#efe6ff;
 
     /* Картки */
     --card:#ffffff;
 
     /* Текст */
-    --text:#32261f;
-    --muted:#796552;
+    --text:#2a2236;
+    --muted:#746884;
 
     /* Акценти */
-    --accent:#fff1e0;
-    --border:#ffd3a5;
+    --accent:#f3edff;
+    --border:#dacbff;
 
     /* Білий */
     --white:#ffffff;
